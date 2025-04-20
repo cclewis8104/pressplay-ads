@@ -57,10 +57,10 @@ export default function AdminDashboard() {
 
   const fetchData = async () => {
     const [c1, p1, c2, a1] = await Promise.all([
-      fetch('/v1/creatives').then(r => r.json()),
-      fetch('/v1/placements').then(r => r.json()),
-      fetch('/v1/campaigns').then(r => r.json()),
-      fetch('/v1/assignments').then(r => r.json()),
+      fetch('http://localhost:3001/v1/creatives').then(r => r.json()),
+      fetch('http://localhost:3001//v1/placements').then(r => r.json()),
+      fetch('http://localhost:3001//v1/campaigns').then(r => r.json()),
+      fetch('http://localhost:3001//v1/assignments').then(r => r.json()),
     ]);
     setCreatives(c1);
     setPlacements(p1);
@@ -69,7 +69,7 @@ export default function AdminDashboard() {
   };
 
   const handleCreativeSubmit = async () => {
-    await fetch('/v1/creatives', {
+    await fetch('http://localhost:3001/v1/creatives', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(newCreative),
@@ -79,7 +79,7 @@ export default function AdminDashboard() {
   };
 
   const handlePlacementSubmit = async () => {
-    await fetch('/v1/placements', {
+    await fetch('http://localhost:3001//v1/placement', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(newPlacement),
@@ -89,7 +89,7 @@ export default function AdminDashboard() {
   };
 
   const handleCampaignSubmit = async () => {
-    await fetch('/v1/campaigns', {
+    await fetch('http://localhost:3001//v1/campaign', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(newCampaign),
