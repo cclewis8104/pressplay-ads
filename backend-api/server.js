@@ -2,6 +2,15 @@ const express = require('express');
 const app = express();
 const port = 3001;
 const path = require('path');
+const { PrismaClient } = require('@prisma/client');
+const prisma = new PrismaClient();
+
+
+// Log all incoming post requests
+app.use((req, res, next) => {
+    console.log(`➡️ ${req.method} ${req.url}`);
+    next();
+  });
 
 // Allow Unity's web requests
 app.use('/assets', express.static(path.join(__dirname, 'public')));
@@ -64,6 +73,44 @@ app.get('/v1/ad', (req, res) => {
   
     res.json(metadata);
   });
+
+
+  app.use(express.json()); // middleware to parse JSON bodies
+
+  app.post('/v1/impression', async (req, res) => {
+    const { placementId, creativeId, timestamp } = req.body;
+  
+    try {
+      await prisma.impression.create({
+        data: {
+          placementId,
+          creativeId,
+          timestamp: new Date(timestamp)
+        }
+      });
+  
+      console.log(`📊 Logged impression: ${placementId} / ${creativeId}`);
+      res.sendStatus(200);
+    } catch (error) {
+      console.error('❌ Failed to save impression:', error);
+      res.sendStatus(500);
+    }
+  });
+
+
+  app.get('/v1/impression', async (req, res) => {
+    try {
+      const impressions = await prisma.impression.findMany({
+        orderBy: { timestamp: 'desc' }
+      });
+      res.json(impressions);
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({ error: 'Failed to fetch impressions' });
+    }
+  });
+  
+
 
 
 
