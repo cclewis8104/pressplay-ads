@@ -1,9 +1,13 @@
 const express = require('express');
+const cors = require('cors');
 const app = express();
 const port = 3001;
 const path = require('path');
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
+
+app.use(cors());
+app.use(express.json()); // middleware to parse JSON bodies
 
 
 // Log all incoming post requests
@@ -75,7 +79,7 @@ app.get('/v1/ad', (req, res) => {
   });
 
 
-  app.use(express.json()); // middleware to parse JSON bodies
+
 
   //Routes for telemetry (imp tracking)
 
@@ -152,7 +156,15 @@ app.get('/v1/ad', (req, res) => {
     const assignments = await prisma.assignment.findMany();
     res.json(assignments);
   });
-
+  
+  // POST a new assignment
+  app.post('/v1/assignments', async (req, res) => {
+    const { creativeId, placementId, campaignId } = req.body;
+    const assignment = await prisma.assignment.create({
+      data: { creativeId, placementId, campaignId },
+    });
+    res.status(201).json(assignment);
+  });
 
 
 
