@@ -77,6 +77,8 @@ app.get('/v1/ad', (req, res) => {
 
   app.use(express.json()); // middleware to parse JSON bodies
 
+  //Routes for telemetry (imp tracking)
+
   app.post('/v1/impression', async (req, res) => {
     const { placementId, creativeId, timestamp } = req.body;
   
@@ -109,7 +111,47 @@ app.get('/v1/ad', (req, res) => {
       res.status(500).json({ error: 'Failed to fetch impressions' });
     }
   });
-  
+
+  //Routes for creative, placement, campaign
+
+  app.get('/v1/creatives', async (req, res) => {
+    const creatives = await prisma.creative.findMany();
+    res.json(creatives);
+  });
+
+  app.post('/v1/creatives', async (req, res) => {
+    const { id, name, imageUrl, clickUrl } = req.body;
+    const newCreative = await prisma.creative.create({ data: { id, name, imageUrl, clickUrl } });
+    res.status(201).json(newCreative);
+  });
+
+  app.get('/v1/placements', async (req, res) => {
+    const placements = await prisma.placement.findMany();
+    res.json(placements);
+  });
+
+  app.post('/v1/placements', async (req, res) => {
+    const { id, name, description } = req.body;
+    const newPlacement = await prisma.creative.create({ data: { id, name, description } });
+    res.status(201).json(newPlacement);
+  });
+
+
+  app.get('/v1/campaigns', async (req, res) => {
+    const campaigns = await prisma.campaign.findMany();
+    res.json(campaigns);
+  });
+
+  app.post('/v1/campaigns', async (req, res) => {
+    const { id, name, status } = req.body;
+    const newCampaign = await prisma.campaign.create({ data: { id, name, status } });
+    res.status(201).json(newCampaign);
+  });
+
+  app.get('/v1/assignments', async (req, res) => {
+    const assignments = await prisma.assignment.findMany();
+    res.json(assignments);
+  });
 
 
 

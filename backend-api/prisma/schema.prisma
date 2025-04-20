@@ -19,3 +19,22 @@ model Impression {
   creativeId  String
   timestamp   DateTime
 }
+
+model Creative {
+  id        String   @id @default(cuid())
+  name      String
+  imageUrl  String
+  clickUrl  String
+}
+
+model Placement {
+  id          String @id
+  name        String
+  description String
+}
+
+model Campaign {
+  id     String   @id @default(cuid())
+  name   String
+  status String
+}
